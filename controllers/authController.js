@@ -5,6 +5,15 @@ const User = require("../models/userModel");
 exports.signup = async (req, res, next) => {
   try {
     let { firstName, lastName, email, password } = req.body;
+
+    const checkEmail = await User.findOne({email})
+console.log(checkEmail)
+    if (checkEmail) {
+      return res.json({
+        status: "failed",
+        message: "Email already exist"
+      })
+    }
     // hash incoming password from req.body
     password = await bcrypt.hash(password, 12);
 
@@ -12,8 +21,7 @@ exports.signup = async (req, res, next) => {
 
     const createUser = await User.create(newUser)
 
-
-    console.log(createUser)
+const id = createUser._id
     // sign jwt token with user id as payload
     const token = jwt.sign({ id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
@@ -24,7 +32,12 @@ exports.signup = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       token,
-      User,
+      data: {
+        id: createUser._id,
+        firstName: createUser.firstName,
+        lastName: createUser.lastName,
+        email: createUser.email
+      },
     });
   } catch (err) {
     res.status(400).json({
@@ -37,16 +50,17 @@ exports.signup = async (req, res, next) => {
   next();
 };
 
-exports.getAllUser = (req, res, next) => {
+exports.getAllUser = async (req, res, next) => {
   try {
-    // const user = User.find();
+    console.log(req.user) 
+    const users = await User.find({})
 
     res.status(200).json({
       status: "success",
-      data: {
-        user,
-      },
+      data: users, 
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+  }
   next();
 };
