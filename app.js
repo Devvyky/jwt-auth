@@ -1,10 +1,13 @@
 const express = require("express");
 const userRoutes = require("./routes/userRoutes");
 const dotenv = require("dotenv");
+const db = require("./config/db")
 
 // configure dotenv for environment variable
 dotenv.config({ path: "./config.env" });
 const app = express();
+
+db()
 
 // Body Parser
 app.use(express.json());

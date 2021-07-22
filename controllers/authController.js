@@ -4,17 +4,21 @@ const User = require("../models/userModel");
 
 exports.signup = async (req, res, next) => {
   try {
-    let { id, firstName, lastName, email, password } = req.body;
+    let { firstName, lastName, email, password } = req.body;
     // hash incoming password from req.body
     password = await bcrypt.hash(password, 12);
 
+    const newUser = { firstName, lastName, email, password };
+
+    const createUser = await User.create(newUser)
+
+
+    console.log(createUser)
     // sign jwt token with user id as payload
     const token = jwt.sign({ id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    const newUser = { id, firstName, lastName, email, password };
-    User.push(newUser);
     // push new user to dummy database
 
     res.status(201).json({
@@ -27,7 +31,7 @@ exports.signup = async (req, res, next) => {
       status: "fail",
       error: err,
     });
-    console.log(`Error 💥: ${err}`);
+    console.log(err);
   }
 
   next();
