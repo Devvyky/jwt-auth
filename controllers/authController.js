@@ -50,7 +50,10 @@ const id = createUser._id
   next();
 };
 
-exports.getAllUser = async (req, res, next) => {
+exports.login = () => {
+}
+
+exports.getAllUser = (req, res, next) => {
   try {
     console.log(req.user) 
     const users = await User.find({})
