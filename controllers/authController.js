@@ -37,6 +37,9 @@ exports.signup = async (req, res, next) => {
   next();
 };
 
+exports.login = () => {
+}
+
 exports.getAllUser = (req, res, next) => {
   try {
     // const user = User.find();
