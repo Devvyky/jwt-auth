@@ -13,7 +13,7 @@ async function auth(req, res, next) {
         console.log(error)
         res.json({
             status: "failed",
-            message: "please login"
+            message: "Please Login"
         })
     }
 }
